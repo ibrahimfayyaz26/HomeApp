@@ -1,219 +1,91 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, Dimensions } from "react-native";
-import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  Platform,
+} from "react-native";
+import { Marker, Callout } from "react-native-maps";
 import * as Location from "expo-location";
+import MapCom from "../../Components/MapView";
+import { locationData } from "../../data/mockLocationData";
+import { WebView } from "react-native-webview";
+import Toast from "react-native-toast-message";
 
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
+
+let Im;
+
+Platform.OS == "android" ? (Im = WebView) : (Im = Image);
 
 const Map = () => {
   const [location, setLocation] = useState();
 
-  const [error, setError] = useState(false);
+  const initial = {
+    latitude: 32.51922279320279,
+    longitude: 74.51706916093826,
+  };
+
+  const data = async () => {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      Toast.show({
+        type: "error",
+        text1: "Permission not granted",
+        text2: "Please give permission to get real time location",
+      });
+      setLocation(initial);
+    } else {
+      let locationData = await Location.getCurrentPositionAsync();
+      setLocation(locationData.coords);
+      // setLocation(initial);
+    }
+  };
 
   useEffect(() => {
     data();
   }, []);
 
-  const data = async () => {
-    const { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== "granted") {
-      setError(true);
-    } else {
-      let loc = await Location.getCurrentPositionAsync();
-      setLocation(loc);
-    }
-  };
   return (
     <View style={{ flex: 1 }}>
       {location ? (
-        <MapView
-          provider={PROVIDER_GOOGLE}
-          style={{ width: width, height: "100%" }}
-          customMapStyle={customStyle}
+        <MapCom
           initialRegion={{
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
+            latitude: location.latitude,
+            longitude: location.longitude,
+            latitudeDelta: 0.007,
+            longitudeDelta: 0.007,
           }}
-          onPress={(e) => console.log(e.nativeEvent.coordinate)}
         >
-          <Marker
-            // ADD draggable={true}
-            // ADD onDragEnd={(e) => console.log(e.nativeEvent.coordinate)}
-            coordinate={{
-              latitude: location.coords.latitude,
-              longitude: location.coords.longitude,
-            }}
-          />
-        </MapView>
+          {locationData.map((l) => {
+            return (
+              <Marker
+                icon={require("../../assets/icons8-marker-100.png")}
+                key={l.coords.latitude * l.coords.longitude}
+                coordinate={l.coords}
+              >
+                <Callout onPress={() => console.log("hello")}>
+                  <View
+                    style={{ flex: 1, width: width / 4, height: height / 6 }}
+                  >
+                    <Text>$2000</Text>
+                    <Im
+                      style={{ width: width / 4, height: height / 10 }}
+                      source={{ uri: l.images[0] }}
+                    />
+                  </View>
+                </Callout>
+              </Marker>
+            );
+          })}
+        </MapCom>
       ) : null}
     </View>
   );
 };
 
 const styles = StyleSheet.create({});
-
-const customStyle = [
-  {
-    elementType: "geometry",
-    stylers: [
-      {
-        color: "#242f3e",
-      },
-    ],
-  },
-  {
-    elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#746855",
-      },
-    ],
-  },
-  {
-    elementType: "labels.text.stroke",
-    stylers: [
-      {
-        color: "#242f3e",
-      },
-    ],
-  },
-  {
-    featureType: "administrative.locality",
-    elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#d59563",
-      },
-    ],
-  },
-  {
-    featureType: "poi",
-    elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#d59563",
-      },
-    ],
-  },
-  {
-    featureType: "poi.park",
-    elementType: "geometry",
-    stylers: [
-      {
-        color: "#263c3f",
-      },
-    ],
-  },
-  {
-    featureType: "poi.park",
-    elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#6b9a76",
-      },
-    ],
-  },
-  {
-    featureType: "road",
-    elementType: "geometry",
-    stylers: [
-      {
-        color: "#38414e",
-      },
-    ],
-  },
-  {
-    featureType: "road",
-    elementType: "geometry.stroke",
-    stylers: [
-      {
-        color: "#212a37",
-      },
-    ],
-  },
-  {
-    featureType: "road",
-    elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#9ca5b3",
-      },
-    ],
-  },
-  {
-    featureType: "road.highway",
-    elementType: "geometry",
-    stylers: [
-      {
-        color: "#746855",
-      },
-    ],
-  },
-  {
-    featureType: "road.highway",
-    elementType: "geometry.stroke",
-    stylers: [
-      {
-        color: "#1f2835",
-      },
-    ],
-  },
-  {
-    featureType: "road.highway",
-    elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#f3d19c",
-      },
-    ],
-  },
-  {
-    featureType: "transit",
-    elementType: "geometry",
-    stylers: [
-      {
-        color: "#2f3948",
-      },
-    ],
-  },
-  {
-    featureType: "transit.station",
-    elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#d59563",
-      },
-    ],
-  },
-  {
-    featureType: "water",
-    elementType: "geometry",
-    stylers: [
-      {
-        color: "#17263c",
-      },
-    ],
-  },
-  {
-    featureType: "water",
-    elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#515c6d",
-      },
-    ],
-  },
-  {
-    featureType: "water",
-    elementType: "labels.text.stroke",
-    stylers: [
-      {
-        color: "#17263c",
-      },
-    ],
-  },
-];
 
 export default Map;
