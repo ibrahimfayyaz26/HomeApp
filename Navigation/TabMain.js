@@ -14,7 +14,7 @@ import Add from "../screens/Add/Add";
 const TabMain = () => {
   return (
     <NavigationContainer>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
       <Tab.Navigator
         activeColor="#69779b"
         keyboardHidesNavigationBar={true}
