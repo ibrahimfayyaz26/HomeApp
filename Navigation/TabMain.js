@@ -7,9 +7,9 @@ import Icon from "react-native-vector-icons/FontAwesome";
 const Tab = createMaterialBottomTabNavigator();
 
 //Screens
-import Map from "../screens/map/Map";
 import User from "../screens/Login/User";
 import Add from "../screens/Add/Add";
+import MapStack from "./MapStack";
 
 const TabMain = () => {
   return (
@@ -21,8 +21,8 @@ const TabMain = () => {
         barStyle={{ backgroundColor: "#33313b" }}
       >
         <Tab.Screen
-          name="Map"
-          component={Map}
+          name="MapStack"
+          component={MapStack}
           options={{
             tabBarIcon: ({ color }) => (
               <Icon name="map-signs" color={color} size={30} />

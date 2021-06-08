@@ -82,11 +82,13 @@ const Map = (props) => {
                   // longitude: location.longitude,
                 }}
               >
-                <Callout onPress={() => console.log("hello")}>
+                <Callout
+                  onPress={() => props.navigation.navigate("Details", l)}
+                >
                   <View
                     style={{ flex: 1, width: width / 4, height: height / 6 }}
                   >
-                    <Text>{l.price}</Text>
+                    <Text>Rs:{l.price}</Text>
                     <Im
                       style={{ width: width / 4, height: height / 10 }}
                       source={{ uri: l.images[0] }}

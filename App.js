@@ -1,9 +1,11 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { LogBox, StyleSheet, Text, View } from "react-native";
 import TabMain from "./Navigation/TabMain";
 import Toast from "react-native-toast-message";
 import store from "./store/store";
 import { Provider } from "react-redux";
+
+LogBox.ignoreAllLogs();
 
 export default function App() {
   return (

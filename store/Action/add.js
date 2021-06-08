@@ -6,7 +6,7 @@ export const ADD_HOUSE = "ADD_HOUSE";
 
 export const fetch = () => {
   return async (dispatch) => {
-    const data = await axios.get("http://192.168.31.123:3000/");
+    const data = await axios.get("http://192.168.10.2:3000/");
 
     return dispatch({
       type: FETCH_DATA,
@@ -35,7 +35,7 @@ export const add = (payload, fun) => {
       },
     };
     const data = await axios.post(
-      "http://192.168.31.123:3000/",
+      "http://192.168.10.2:3000/",
       formData,
       config
     );

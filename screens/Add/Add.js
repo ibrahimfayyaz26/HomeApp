@@ -75,7 +75,7 @@ const Add = (props) => {
 
       props.add(house);
       setIsLoading(false);
-      props.navigation.navigate("Map");
+      props.navigation.navigate("MapStack");
       Toast.show({
         type: "success",
         text1: "House uploaded",
